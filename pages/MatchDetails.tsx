@@ -246,7 +246,7 @@ export default function MatchDetails({ user }: { user: User | null }) {
                 {!isJoined && !isFull && (
                   <div className="space-y-4">
                     <button
-                        disabled={joining || (user && !hasBalance)}
+                        disabled={joining || (user ? !hasBalance : false)}
                         onClick={handleJoinWithBalance}
                         className={`w-full py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.3em] shadow-2xl transition-all ${
                           (user && hasBalance) || !user 
