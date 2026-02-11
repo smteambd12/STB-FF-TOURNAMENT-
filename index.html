@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STB FF TOURNAMENT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,38 +15,48 @@
             background-color: #050505;
             color: #ffffff;
             margin: 0;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
         .font-gaming {
             font-family: 'Oxanium', cursive;
         }
         .neon-red {
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
         }
         .neon-yellow {
-            box-shadow: 0 0 15px rgba(234, 179, 8, 0.4);
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.25);
         }
         .glass-dark {
-            background: rgba(15, 15, 15, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+        .premium-card {
+            background: linear-gradient(145deg, #0f0f0f 0%, #050505 100%);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: #0a0a0a;
+            background: #050505;
         }
         ::-webkit-scrollbar-thumb {
             background: #ef4444;
-            border-radius: 4px;
+            border-radius: 10px;
         }
         .animate-marquee {
             display: inline-block;
-            animation: marquee 20s linear infinite;
+            animation: marquee 25s linear infinite;
         }
         @keyframes marquee {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
+        }
+        input, select, textarea {
+            font-size: 16px !important; /* Prevents auto-zoom on iOS */
         }
     </style>
 <script type="importmap">
