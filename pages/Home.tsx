@@ -87,10 +87,6 @@ const MatchCard: React.FC<{ match: Match; user: User | null }> = ({ match, user 
 export default function Home({ user }: { user: User | null }) {
   const [matches, setMatches] = useState<Match[]>([]);
   const [filter, setFilter] = useState<MatchType | 'ALL'>('ALL');
-  const [showAdminGate, setShowAdminGate] = useState(false);
-  const [adminPass, setAdminPass] = useState('');
-  const [gateError, setGateError] = useState(false);
-  const [clickCount, setClickCount] = useState(0);
   const [settings, setSettings] = useState(db.getSettings());
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
@@ -110,30 +106,6 @@ export default function Home({ user }: { user: User | null }) {
     window.addEventListener('storage_update', updateData);
     return () => window.removeEventListener('storage_update', updateData);
   }, []);
-
-  const handleSecretTrigger = () => {
-    setClickCount(prev => {
-      if (prev + 1 >= 5) {
-        setShowAdminGate(true);
-        return 0;
-      }
-      return prev + 1;
-    });
-    setTimeout(() => setClickCount(0), 3000);
-  };
-
-  const handleAdminAuth = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (adminPass === 'stbadmin786') {
-      db.setSystemAdmin(true);
-      setShowAdminGate(false);
-      navigate('/admin');
-    } else {
-      setGateError(true);
-      setAdminPass('');
-      setTimeout(() => setGateError(false), 2000);
-    }
-  };
 
   return (
     <div className="space-y-8 md:space-y-12 animate-in fade-in duration-700 pb-20 overflow-x-hidden">
@@ -214,32 +186,22 @@ export default function Home({ user }: { user: User | null }) {
         </div>
       )}
 
-      {/* ADMIN GATE */}
-      {showAdminGate && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/98 backdrop-blur-3xl animate-in fade-in duration-500 p-8">
-          <div className="w-full max-w-xs space-y-8 text-center">
-            <div className="w-20 h-20 bg-red-600/10 border border-red-600/20 rounded-2xl flex items-center justify-center mx-auto transform rotate-12 shadow-2xl">
-                <span className="text-red-600 text-4xl font-black -rotate-12 italic">STB</span>
+      <footer className="mt-20 py-16 border-t border-zinc-900 text-center bg-zinc-950/20">
+        <div className="max-w-xl mx-auto space-y-6">
+            <div className="flex justify-center items-center space-x-2">
+                <div className="w-10 h-1 bg-red-600/30 rounded-full"></div>
+                <h3 className="text-sm font-black font-gaming italic uppercase text-zinc-500">STB LEGACY SYSTEMS</h3>
+                <div className="w-10 h-1 bg-red-600/30 rounded-full"></div>
             </div>
-            <h2 className="text-zinc-600 text-[10px] font-black uppercase tracking-[0.5em]">COMMAND UPLINK</h2>
-            <form onSubmit={handleAdminAuth} className="space-y-8">
-              <input 
-                type="password" autoFocus value={adminPass} onChange={e => setAdminPass(e.target.value)} placeholder="••••"
-                className={`w-full bg-transparent border-b-2 ${gateError ? 'border-red-600' : 'border-zinc-800'} py-4 text-center text-4xl tracking-[0.5em] focus:outline-none focus:border-red-600 transition-all text-white font-mono placeholder:text-zinc-900`}
-              />
-              <div className="flex flex-col space-y-3">
-                  <button type="submit" className="w-full py-4 bg-red-600 text-white rounded-xl font-black uppercase text-[10px] tracking-widest neon-red shadow-xl">ESTABLISH UPLINK</button>
-                  <button type="button" onClick={() => setShowAdminGate(false)} className="text-[9px] text-zinc-700 font-black uppercase tracking-widest hover:text-zinc-500">TERMINATE</button>
-              </div>
-            </form>
-          </div>
+            <p className="text-zinc-700 text-[10px] font-black uppercase tracking-[0.4em] px-8 leading-relaxed">The ultimate platform for strategic Free Fire combatants in Bangladesh.</p>
+            <div className="flex justify-center space-x-6">
+                <Link to="/admin-login" className="text-zinc-800 hover:text-red-600 transition-colors text-[9px] font-black uppercase tracking-widest border border-zinc-900 px-4 py-2 rounded-lg hover:border-red-600/30">ADMIN PORTAL</Link>
+                <Link to="/leaderboard" className="text-zinc-800 hover:text-yellow-600 transition-colors text-[9px] font-black uppercase tracking-widest border border-zinc-900 px-4 py-2 rounded-lg hover:border-yellow-600/30">HALL OF FAME</Link>
+            </div>
+            <p className="text-zinc-900 text-[8px] uppercase font-black tracking-[0.5em] pt-10">
+              © 2025 STB SYSTEM • EXCELLENCE IN COMBAT
+            </p>
         </div>
-      )}
-
-      <footer className="mt-20 py-10 border-t border-zinc-950 text-center opacity-20">
-        <p className="text-zinc-800 text-[9px] uppercase font-black tracking-[0.5em] select-none">
-          © 2025 <span onClick={handleSecretTrigger} className="cursor-pointer hover:text-red-900 transition-colors">STB SYSTEM</span> • EXCELLENCE IN COMBAT
-        </p>
       </footer>
     </div>
   );

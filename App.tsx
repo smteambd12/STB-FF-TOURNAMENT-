@@ -16,13 +16,12 @@ import Leaderboard from './pages/Leaderboard';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
 import MyMatches from './pages/MyMatches';
+import AdminLogin from './pages/AdminLogin';
 
 const Sidebar: React.FC<{ user: User | null; isSystemAdmin: boolean }> = ({ user, isSystemAdmin }) => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
   const isAdmin = isSystemAdmin || (user?.isAdmin ?? false);
-
-  if (!user && !isSystemAdmin) return null;
 
   return (
     <div className="fixed left-0 top-0 bottom-0 w-64 glass-dark border-r border-zinc-900 hidden lg:flex flex-col z-50">
@@ -53,7 +52,7 @@ const Sidebar: React.FC<{ user: User | null; isSystemAdmin: boolean }> = ({ user
           </Link>
         ))}
 
-        {isAdmin && (
+        {isAdmin ? (
           <>
             <div className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.3em] mt-10 mb-4 px-4">COMMANDER ONLY</div>
             {ADMIN_NAVIGATION.map((item) => (
@@ -71,29 +70,38 @@ const Sidebar: React.FC<{ user: User | null; isSystemAdmin: boolean }> = ({ user
               </Link>
             ))}
           </>
+        ) : (
+          <div className="mt-10 px-4">
+             <Link to="/admin-login" className="flex items-center space-x-3 px-5 py-3.5 rounded-xl bg-zinc-950 border border-zinc-900 text-zinc-600 hover:text-red-600 hover:border-red-600/30 transition-all group">
+                <span className="text-xl group-hover:scale-110 transition-transform">⚙️</span>
+                <span className="font-black uppercase text-[10px] tracking-widest italic">Command Center</span>
+             </Link>
+          </div>
         )}
       </nav>
 
-      <div className="p-6 border-t border-zinc-900">
-        <Link to="/profile" className="flex items-center space-x-4 bg-zinc-950 p-4 rounded-xl mb-4 border border-zinc-900 hover:border-zinc-700 transition-all">
-          <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center font-black italic shadow-lg text-red-500 uppercase text-lg">
-            {user?.name?.[0] || 'A'}
-          </div>
-          <div className="overflow-hidden">
-            <p className="text-[10px] font-black uppercase text-white truncate italic">{user?.name || 'Commander'}</p>
-            <p className="text-[8px] text-zinc-600 font-bold uppercase tracking-widest">ID: #{user?.numericId || '000000'}</p>
-          </div>
-        </Link>
-        <button 
-          onClick={() => {
-            db.setSystemAdmin(false);
-            signOut(auth);
-          }}
-          className="w-full py-2 text-zinc-700 hover:text-red-600 text-[8px] font-black uppercase tracking-[0.3em] transition-colors"
-        >
-          LOGOUT SESSION
-        </button>
-      </div>
+      {user && (
+        <div className="p-6 border-t border-zinc-900">
+          <Link to="/profile" className="flex items-center space-x-4 bg-zinc-950 p-4 rounded-xl mb-4 border border-zinc-900 hover:border-zinc-700 transition-all">
+            <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center font-black italic shadow-lg text-red-500 uppercase text-lg">
+              {user.name[0]}
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-[10px] font-black uppercase text-white truncate italic">{user.name}</p>
+              <p className="text-[8px] text-zinc-600 font-bold uppercase tracking-widest">ID: #{user.numericId}</p>
+            </div>
+          </Link>
+          <button 
+            onClick={() => {
+              db.setSystemAdmin(false);
+              signOut(auth);
+            }}
+            className="w-full py-2 text-zinc-700 hover:text-red-600 text-[8px] font-black uppercase tracking-[0.3em] transition-colors"
+          >
+            LOGOUT SESSION
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -257,6 +265,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home user={user} />} />
             <Route path="/login" element={user ? <Navigate to="/" /> : <Auth />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/match/:id" element={<MatchDetails user={user as any} />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/my-matches" element={user ? <MyMatches user={user} /> : <Navigate to="/login" />} />
