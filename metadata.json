@@ -1,0 +1,7 @@
+{
+  "name": "STB FF TOURNAMENT",
+  "description": "A high-end Free Fire tournament management platform with wallet system, real-time match joining, and an advanced admin dashboard.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
